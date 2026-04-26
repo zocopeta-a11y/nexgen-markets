@@ -1,0 +1,244 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexGen Markets | Crypto & Stocks</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <!-- Main Top Navigation (Replaces Sidebar) -->
+    <nav class="top-nav glass-panel">
+        <div class="logo">
+            <i class="ph ph-chart-polar"></i>
+            <span>NexGen</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-item active">Dashboard</a>
+            <a href="markets.html" class="nav-item">Markets</a>
+            <a href="portfolio.html" class="nav-item">Portfolio Manager</a>
+        </div>
+        <div class="top-actions">
+            <div class="search-bar" id="global-search-container" style="position: relative;">
+                <i class="ph ph-magnifying-glass"></i>
+                <input type="text" id="global-search-input" placeholder="Search markets, crypto, stocks..."
+                    autocomplete="off">
+
+                <!-- Search Results Dropdown -->
+                <div class="search-dropdown hidden" id="search-dropdown">
+                    <div class="search-dropdown-header">
+                        <span class="search-dropdown-title">Results</span>
+                        <span class="search-dropdown-count" id="search-count">0 found</span>
+                    </div>
+                    <ul class="search-dropdown-list" id="search-results-list">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+            </div>
+            <button id="connect-wallet-btn" class="btn-primary glow-effect">
+                <i class="ph ph-link"></i> Connect Account
+            </button>
+        </div>
+    </nav>
+
+    <!-- Rolling Market Ticker -->
+    <div class="ticker-wrap">
+        <div class="ticker" id="global-ticker">
+            <!-- Populated by JS with live data -->
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="hero-content contained-width">
+            <h1 class="fade-in-up">The Future of <br><span class="highlight-text">Wealth Management.</span></h1>
+            <p class="hero-subtitle fade-in-up" style="animation-delay: 0.2s;">
+                Real-time insights, institutional-grade analytics, and AI-driven growth for the modern investor.
+            </p>
+            
+            <div class="hero-buttons fade-in-up" style="animation-delay: 0.4s;">
+                <button id="main-explore-btn" class="btn-primary glow-effect hero-btn">Open Dashboard</button>
+                <button id="main-portfolio-btn" class="btn-secondary hero-btn">My Assets</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="app-container contained-width">
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div id="dashboard" class="view-section active">
+                <div class="bento-grid">
+                    <!-- Portfolio Summary (Bento Large) -->
+                    <section class="bento-item bento-large fade-in-up" style="animation-delay: 0.1s;">
+                        <div class="section-header">
+                            <h2 style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary);">Total Portfolio Balance</h2>
+                            <div id="market-status-badge" class="market-badge closed" style="transform: scale(0.8);">
+                                <i class="ph ph-clock"></i> <span id="market-status-text">CLOSED</span>
+                            </div>
+                        </div>
+                        <div class="balance-display" style="margin-top: 32px;">
+                            <h1 id="total-balance" style="font-size: 56px; font-weight: 700;">$0.00</h1>
+                            <div style="display: flex; align-items: center; gap: 12px; margin-top: 12px;">
+                                <span class="live-pulse-wrap"><span id="live-pulse" class="live-pulse"></span><span class="live-label" id="last-updated-time">Live Â· just now</span></span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 40px; display: flex; gap: 12px;">
+                            <button class="btn-primary btn-sm glow-effect" onclick="document.getElementById('connect-modal').classList.remove('hidden')">
+                                <i class="ph ph-plus"></i> Add Asset
+                            </button>
+                            <button class="btn-secondary btn-sm" onclick="window.location.href='portfolio.html'">
+                                <i class="ph ph-briefcase"></i> View Breakdown
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- AI Analyst Insights (Bento Small) -->
+                    <section class="bento-item bento-small fade-in-up" style="animation-delay: 0.2s; background: linear-gradient(135deg, rgba(226, 114, 91, 0.1), transparent);">
+                        <div class="section-header">
+                            <h2 style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: var(--primary-accent);">
+                                <i class="ph ph-sparkle"></i> AI Analyst
+                            </h2>
+                        </div>
+                        <div style="margin-top: 24px;">
+                            <p id="ai-insight-text" style="font-size: 15px; line-height: 1.6; color: var(--text-primary);">
+                                Markets are showing strong support at current levels. Small-cap rotation is underway as tech consolidation continues.
+                            </p>
+                            <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.05);">
+                                <span style="font-size: 12px; color: var(--text-secondary);">Top Signal:</span>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+                                    <span style="font-weight: 700; color: var(--success);">NVDA: STRONG BUY</span>
+                                    <span style="font-size: 12px; background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 2px 8px; border-radius: 4px;">92% Conf.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Top Picks (Bento Full) -->
+                    <section class="bento-item bento-full fade-in-up" style="animation-delay: 0.3s;">
+                        <div class="section-header">
+                            <h2>Strategic Alpha <span style="font-weight: 400; color: var(--text-secondary); font-size: 14px; margin-left: 12px;">AI-Curated Selection</span></h2>
+                            <a href="markets.html" style="font-size: 13px; color: var(--primary-accent); text-decoration: none;">View All Markets <i class="ph ph-arrow-right"></i></a>
+                        </div>
+                        <div class="picks-container" id="top-picks-container">
+                            <!-- Populated by JS -->
+                        </div>
+                    </section>
+
+                    <!-- Movers Split (Bento Half x 2) -->
+                    <section class="bento-item bento-half fade-in-up" style="animation-delay: 0.4s;">
+                        <h2 class="section-title" style="font-size: 18px;">Top Gainers ðŸš€</h2>
+                        <div id="top-movers-container" style="margin-top: 20px;">
+                            <!-- Populated by JS -->
+                        </div>
+                    </section>
+
+                    <section class="bento-item bento-half fade-in-up" style="animation-delay: 0.5s;">
+                        <h2 class="section-title" style="font-size: 18px;">Deep ValueðŸ’Ž</h2>
+                        <div id="deep-value-container" style="margin-top: 20px;">
+                            <!-- Populated by JS -->
+                        </div>
+                    </section>
+
+                    <!-- News (Bento Large) -->
+                    <section class="bento-item bento-large fade-in-up" style="animation-delay: 0.6s;">
+                        <div class="section-header">
+                            <h2 class="section-title">Market Pulse ðŸ“°</h2>
+                        </div>
+                        <div class="news-grid" id="news-container" style="margin-top: 20px;">
+                            <!-- Populated by JS -->
+                        </div>
+                    </section>
+
+                    <!-- Mood/Status (Bento Small) -->
+                    <section class="bento-item bento-small fade-in-up" style="animation-delay: 0.7s; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                        <i class="ph ph-wind" style="font-size: 48px; color: var(--secondary-accent); margin-bottom: 16px;"></i>
+                        <h3 style="margin-bottom: 8px;">Market Sentiment</h3>
+                        <p style="color: var(--secondary-accent); font-weight: 700; font-size: 20px;">Calm & Steady</p>
+                        <p style="color: var(--text-secondary); font-size: 12px; margin-top: 12px;">Volatility Index: <span style="color: white;">14.2 (Low)</span></p>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Connect Account Modal -->
+    <div class="modal-overlay hidden" id="connect-modal">
+        <div class="modal-content glass-panel" style="background: var(--bg-dark); max-width: 450px;">
+            <button class="close-modal"><i class="ph ph-x"></i></button>
+            <h2>Connect Investment Provider</h2>
+            <p>Select your exchange or brokerage to sync your portfolio securely via NexGen API.</p>
+
+            <div class="provider-list">
+                <button class="provider-btn" data-provider="binance">
+                    <i class="ph ph-currency-btc"></i>
+                    <span>Binance</span>
+                </button>
+                <button class="provider-btn" data-provider="coinbase">
+                    <i class="ph ph-hexagon"></i>
+                    <span>Coinbase</span>
+                </button>
+                <button class="provider-btn" data-provider="indexa">
+                    <i class="ph ph-chart-pie-slice" style="color: #10b981;"></i>
+                    <span>Indexa Capital</span>
+                </button>
+                <button class="provider-btn" data-provider="robinhood">
+                    <i class="ph ph-leaf" style="color: #10b981;"></i>
+                    <span>Robinhood</span>
+                </button>
+            </div>
+
+            <p style="margin-top: 24px; font-size: 12px; text-align: center; color: var(--text-secondary);">
+                <i class="ph ph-lock-key"></i> Bank-grade encryption. We never store your passwords.
+            </p>
+        </div>
+    </div>
+
+    <!-- News Pop-up Container -->
+    <div id="news-toast-container" class="news-toast-container"></div>
+
+    <!-- Floating AI Chatbot -->
+    <button id="ai-chat-toggle" class="ai-chat-toggle glow-effect" aria-label="Open AI Assistant">
+        <i class="ph ph-robot"></i>
+    </button>
+
+    <div id="ai-chat-window" class="ai-chat-window hidden glass-panel">
+        <div class="ai-chat-header">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="ai-avatar">
+                    <i class="ph ph-robot"></i>
+                </div>
+                <div>
+                    <h3 style="font-size: 14px; margin: 0; color: white;">NexGen AI Assistant</h3>
+                    <span style="font-size: 11px; color: var(--text-secondary);"><span style="display:inline-block; width:6px; height:6px; background:var(--success); border-radius:50%; margin-right:4px;"></span>Online</span>
+                </div>
+            </div>
+            <button id="ai-chat-close" class="close-btn"><i class="ph ph-x"></i></button>
+        </div>
+        <div id="ai-chat-messages" class="ai-chat-messages">
+            <div class="chat-message ai-message fade-in">
+                <div class="message-bubble">
+                    Hello! I'm your NexGen AI financial assistant. You can tell me what you've invested in, and I'll automatically sync it to your portfolio.<br><br>Try saying: <i style="color:var(--primary-accent);">"I bought 10 NVDA for $120 today"</i>.
+                </div>
+            </div>
+        </div>
+        <div class="ai-chat-input-area">
+            <input type="text" id="ai-chat-input" placeholder="Type a message..." autocomplete="off">
+            <button id="ai-chat-send" class="ai-chat-send"><i class="ph ph-paper-plane-right"></i></button>
+        </div>
+    </div>
+
+    <!-- News Pop-up Container -->
+
+    <script src="app.js?v=clearCache4"></script>
+</body>
+
+</html>
