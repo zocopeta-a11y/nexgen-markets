@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Manager | NexGen Markets</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="portfolio.css">
+</head>
+
+<body>
+    <nav class="top-nav glass-panel">
+        <div class="logo"><i class="ph ph-chart-polar"></i><span>NexGen</span></div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-item">Dashboard</a>
+            <a href="markets.html" class="nav-item">Markets</a>
+            <a href="portfolio.html" class="nav-item active">Portfolio Manager</a>
+        </div>
+        <div class="top-actions">
+            <div class="search-bar" id="global-search-container" style="position:relative;">
+                <i class="ph ph-magnifying-glass"></i>
+                <input type="text" id="global-search-input" placeholder="Search markets, crypto, stocks..." autocomplete="off">
+                <div class="search-dropdown hidden" id="search-dropdown">
+                    <div class="search-dropdown-header">
+                        <span class="search-dropdown-title">Results</span>
+                        <span class="search-dropdown-count" id="search-count">0 found</span>
+                    </div>
+                    <ul class="search-dropdown-list" id="search-results-list"></ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="ticker-wrap"><div class="ticker" id="global-ticker"></div></div>
+
+    <div class="app-container contained-width">
+        <main class="main-content" style="padding-top:24px;">
+
+            <!-- Summary Cards -->
+            <div class="pf-summary-row">
+                <div class="pf-summary-card glass-panel">
+                    <span class="pf-card-label">Total Portfolio Value</span>
+                    <span class="pf-card-value" id="pf-total-value">$0.00</span>
+                    <span class="pf-card-sub" id="pf-total-pnl-pct" style="color:var(--text-secondary);">--</span>
+                </div>
+                <div class="pf-summary-card glass-panel">
+                    <span class="pf-card-label">Total Invested</span>
+                    <span class="pf-card-value" id="pf-invested">$0.00</span>
+                    <span class="pf-card-sub" style="color:var(--text-secondary);">Cost basis</span>
+                </div>
+                <div class="pf-summary-card glass-panel">
+                    <span class="pf-card-label">Unrealized P&amp;L</span>
+                    <span class="pf-card-value" id="pf-pnl">$0.00</span>
+                    <span class="pf-card-sub" id="pf-pnl-sub" style="color:var(--text-secondary);">--</span>
+                </div>
+                <div class="pf-summary-card glass-panel">
+                    <span class="pf-card-label">Positions</span>
+                    <span class="pf-card-value" id="pf-positions">0</span>
+                    <span class="pf-card-sub" style="color:var(--text-secondary);">Assets tracked</span>
+                </div>
+            </div>
+
+            <!-- Holdings Table -->
+            <section class="glass-panel pf-holdings-section">
+                <div class="section-header" style="margin-bottom:20px;">
+                    <h2 class="section-title" style="font-size:20px;">Holdings</h2>
+                    <button id="clear-all-btn" class="btn-secondary btn-sm" style="font-size:12px;color:var(--danger);border-color:var(--danger);">
+                        <i class="ph ph-trash"></i> Clear All
+                    </button>
+                </div>
+                <div id="pf-holdings-empty" style="text-align:center;padding:48px;color:var(--text-secondary);">
+                    <i class="ph ph-briefcase" style="font-size:40px;display:block;margin-bottom:12px;"></i>
+                    No holdings yet. Connect a broker or use the AI Concierge below.
+                </div>
+                <div class="table-container" id="pf-holdings-table-wrap" style="display:none;">
+                    <table class="market-table">
+                        <thead>
+                            <tr><th>Asset</th><th>Qty</th><th>Buy Price</th><th>Current</th><th>Value</th><th>P&amp;L</th><th></th></tr>
+                        </thead>
+                        <tbody id="pf-holdings-tbody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Add / Connect Panel -->
+            <section class="glass-panel pf-add-section">
+                <div class="pf-tabs">
+                    <button class="pf-tab active" data-tab="ai">
+                        <i class="ph ph-sparkle"></i> AI Concierge
+                    </button>
+                    <button class="pf-tab" data-tab="connect">
+                        <i class="ph ph-plugs-connected"></i> Connect &amp; Import
+                    </button>
+                    <button class="pf-tab" data-tab="analysis">
+                        <i class="ph ph-chart-pie-slice"></i> Strategy
+                    </button>
+                </div>
+
+                <!-- AI Concierge Tab -->
+                <div class="pf-tab-content active" id="tab-ai">
+                    <p class="pf-tab-desc">Describe your investments in plain language &mdash; I&rsquo;ll parse the details automatically.</p>
+                    <div class="ai-chat-input-container" id="ai-chat-container">
+                        <i class="ph ph-sparkle ai-icon"></i>
+                        <input type="text" id="ai-asset-input" class="ai-chat-input"
+                            placeholder='e.g. "10 NVDA at $120 today" or "$1000 in Bitcoin on 15 april 2024"'>
+                        <button id="ai-parse-btn" class="ai-send-btn"><i class="ph ph-paper-plane-tilt"></i></button>
+                    </div>
+                    <div id="ai-processing-state" class="ai-processing hidden">
+                        <i class="ph ph-spinner ph-spin"></i> <span class="pulsing-text">Fetching historical price...</span>
+                    </div>
+                    <div id="ai-result-preview" class="ai-result-preview hidden">
+                        <div class="preview-header"><i class="ph ph-check-circle success-text"></i> Extraction Successful</div>
+                        <div class="preview-grid" id="preview-grid">
+                            <div class="preview-item"><span>Asset:</span> <strong id="prev-asset">--</strong></div>
+                            <div class="preview-item"><span>Qty:</span> <strong id="prev-qty">--</strong></div>
+                            <div class="preview-item"><span>Buy Price:</span> <strong id="prev-price">--</strong></div>
+                            <div class="preview-item"><span>Date:</span> <strong id="prev-date">--</strong></div>
+                        </div>
+                        <button id="confirm-ai-asset-btn" class="btn-primary full-width-btn" style="margin-top:14px;">
+                            <i class="ph ph-plus"></i> Confirm &amp; Add to Portfolio
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Connect & Import Tab -->
+                <div class="pf-tab-content" id="tab-connect">
+                    <!-- Provider Grid -->
+                    <div id="provider-grid-view">
+                        <p class="pf-tab-desc" style="margin-bottom:20px;">Select your broker or exchange. Connect via live API or import from a CSV export.</p>
+                        <div class="provider-tiles" id="provider-tiles"></div>
+                    </div>
+
+                    <!-- Provider Detail (shown after selecting) -->
+                    <div id="provider-detail-view" class="hidden">
+                        <button id="provider-back-btn" class="btn-secondary btn-sm" style="margin-bottom:20px;">
+                            <i class="ph ph-arrow-left"></i> Back to Providers
+                        </button>
+
+                        <div class="pf-connect-header" id="provider-detail-header"></div>
+
+                        <div class="pf-info-box" id="provider-instructions"></div>
+
+                        <!-- API connect fields -->
+                        <div id="provider-api-fields" class="hidden">
+                            <div class="pf-form-group">
+                                <label>API Key</label>
+                                <input type="text" id="prov-api-key" class="premium-input" placeholder="Paste your API Key" autocomplete="off">
+                            </div>
+                            <div class="pf-form-group">
+                                <label>API Secret</label>
+                                <input type="password" id="prov-api-secret" class="premium-input" placeholder="Paste your API Secret" autocomplete="off">
+                            </div>
+                            <button id="prov-api-connect-btn" class="btn-primary glow-effect">
+                                <i class="ph ph-plug"></i> Sync Now
+                            </button>
+                        </div>
+
+                        <!-- CSV upload fields -->
+                        <div id="provider-csv-fields" class="hidden">
+                            <div class="pf-dropzone" id="csv-dropzone">
+                                <i class="ph ph-upload-simple" style="font-size:36px;color:var(--text-secondary);"></i>
+                                <p>Drag &amp; drop your CSV here, or <label for="csv-file-input" style="color:var(--primary-accent);cursor:pointer;">browse</label></p>
+                                <input type="file" id="csv-file-input" accept=".csv,.txt" style="display:none;">
+                                <span id="csv-filename" class="pf-csv-filename hidden"></span>
+                            </div>
+
+                            <div id="csv-preview" class="hidden" style="margin-top:16px;">
+                                <h4 style="font-size:14px;margin-bottom:8px;">
+                                    Preview &mdash; <span id="csv-row-count">0</span> positions detected
+                                </h4>
+                                <div class="table-container" style="max-height:220px;overflow-y:auto;">
+                                    <table class="market-table" style="font-size:13px;">
+                                        <thead><tr><th>Ticker</th><th>Qty</th><th>Buy Price</th><th>Date</th></tr></thead>
+                                        <tbody id="csv-preview-body"></tbody>
+                                    </table>
+                                </div>
+                                <button id="csv-import-btn" class="btn-primary glow-effect" style="margin-top:14px;width:100%;">
+                                    <i class="ph ph-download-simple"></i> Import to Portfolio
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="provider-status" class="pf-status hidden" style="margin-top:14px;"></div>
+                    </div>
+                </div>
+
+                <!-- Strategy Tab -->
+                <div class="pf-tab-content" id="tab-analysis">
+                    <div style="display:flex;gap:16px;align-items:flex-end;margin-bottom:20px;flex-wrap:wrap;">
+                        <div style="flex:1;min-width:180px;">
+                            <label style="font-size:13px;color:var(--text-secondary);display:block;margin-bottom:6px;">Additional Cash ($)</label>
+                            <input type="number" id="cash-input" placeholder="e.g. 5000" class="premium-input">
+                        </div>
+                        <button id="analyze-btn" class="btn-primary glow-effect" style="height:44px;padding:0 24px;">
+                            <i class="ph ph-magic-wand"></i> Analyze Strategy
+                        </button>
+                    </div>
+                    <div id="analysis-output">
+                        <div style="text-align:center;padding:40px;color:var(--text-secondary);">
+                            <i class="ph ph-strategy" style="font-size:40px;display:block;margin-bottom:12px;"></i>
+                            Add holdings and click Analyze Strategy.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <div id="news-toast-container" class="news-toast-container"></div>
+
+    <button id="ai-chat-toggle" class="ai-chat-toggle glow-effect" aria-label="Open AI Assistant">
+        <i class="ph ph-robot"></i>
+    </button>
+    <div id="ai-chat-window" class="ai-chat-window hidden glass-panel">
+        <div class="ai-chat-header">
+            <div style="display:flex;align-items:center;gap:10px;">
+                <div class="ai-avatar"><i class="ph ph-robot"></i></div>
+                <div>
+                    <h3 style="font-size:14px;margin:0;color:white;">NexGen AI Assistant</h3>
+                    <span style="font-size:11px;color:var(--text-secondary);"><span style="display:inline-block;width:6px;height:6px;background:var(--success);border-radius:50%;margin-right:4px;"></span>Online</span>
+                </div>
+            </div>
+            <button id="ai-chat-close" class="close-btn"><i class="ph ph-x"></i></button>
+        </div>
+        <div id="ai-chat-messages" class="ai-chat-messages">
+            <div class="chat-message ai-message fade-in">
+                <div class="message-bubble">
+                    Tell me what you bought and when.<br><br>
+                    Try: <i style="color:var(--primary-accent);">"I bought 10 NVDA at $120 today"</i>.
+                </div>
+            </div>
+        </div>
+        <div class="ai-chat-input-area">
+            <input type="text" id="ai-chat-input" placeholder="Type a message..." autocomplete="off">
+            <button id="ai-chat-send" class="ai-chat-send"><i class="ph ph-paper-plane-right"></i></button>
+        </div>
+    </div>
+
+    <script src="app.js?v=clearCache4"></script>
+    <script src="portfolio.js?v=2"></script>
+</body>
+</html>
