@@ -1,0 +1,316 @@
+/* ============================================================
+   Portfolio Manager — dedicated styles
+   ============================================================ */
+
+/* Summary row */
+.pf-summary-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+@media (max-width: 900px) {
+    .pf-summary-row { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 500px) {
+    .pf-summary-row { grid-template-columns: 1fr; }
+}
+
+.pf-summary-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 20px 22px;
+}
+
+.pf-card-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-secondary);
+}
+
+.pf-card-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+}
+
+.pf-card-sub {
+    font-size: 13px;
+}
+
+/* Holdings section */
+.pf-holdings-section {
+    margin-bottom: 24px;
+    padding: 28px;
+}
+
+/* Add section */
+.pf-add-section {
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Tabs */
+.pf-tabs {
+    display: flex;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 0 28px;
+    gap: 4px;
+}
+
+.pf-tab {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    padding: 18px 16px 16px;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    white-space: nowrap;
+}
+
+.pf-tab:hover {
+    color: var(--text-primary);
+}
+
+.pf-tab.active {
+    color: var(--primary-accent);
+    border-bottom-color: var(--primary-accent);
+}
+
+.pf-tab-content {
+    display: none;
+    padding: 28px;
+}
+
+.pf-tab-content.active {
+    display: block;
+}
+
+.pf-tab-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+}
+
+/* Info box */
+.pf-info-box {
+    display: flex;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.pf-info-box > i {
+    font-size: 18px;
+    color: var(--secondary-accent);
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.pf-info-box strong {
+    color: var(--text-primary);
+}
+
+/* Connect header */
+.pf-connect-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.pf-connect-icon {
+    font-size: 40px;
+    flex-shrink: 0;
+}
+
+.pf-connect-header h3 {
+    margin: 0 0 4px;
+    font-size: 20px;
+}
+
+.pf-connect-header p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+/* Form group */
+.pf-form-group {
+    margin-bottom: 14px;
+}
+
+.pf-form-group label {
+    display: block;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+/* Status messages */
+.pf-status {
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pf-status.success {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.pf-status.error {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.pf-status.loading {
+    background: rgba(226, 114, 91, 0.08);
+    color: var(--primary-accent);
+    border: 1px solid rgba(226, 114, 91, 0.15);
+}
+
+/* CSV dropzone */
+.pf-dropzone {
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    transition: border-color 0.2s, background 0.2s;
+    cursor: pointer;
+    margin-bottom: 4px;
+}
+
+.pf-dropzone:hover, .pf-dropzone.drag-over {
+    border-color: var(--primary-accent);
+    background: rgba(226, 114, 91, 0.04);
+}
+
+.pf-dropzone p {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin: 10px 0 0;
+}
+
+.pf-csv-filename {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--secondary-accent);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Provider tiles grid */
+.provider-tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 14px;
+}
+
+.provider-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 12px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    text-align: center;
+    position: relative;
+}
+
+.provider-tile:hover {
+    border-color: rgba(226, 114, 91, 0.4);
+    background: rgba(226, 114, 91, 0.05);
+    transform: translateY(-2px);
+}
+
+.provider-tile-logo {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.provider-tile-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.provider-tile-sub {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.provider-badge {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    padding: 2px 7px;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
+
+.provider-badge.live {
+    background: rgba(226, 114, 91, 0.15);
+    color: var(--primary-accent);
+    border: 1px solid rgba(226, 114, 91, 0.3);
+}
+
+.provider-badge.csv {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+/* Holdings table in portfolio */
+#pf-holdings-tbody tr {
+    cursor: default;
+}
+
+#pf-holdings-tbody .remove-btn {
+    opacity: 0.4;
+    transition: opacity 0.2s;
+}
+
+#pf-holdings-tbody tr:hover .remove-btn {
+    opacity: 1;
+}
+
+/* Strategy analysis */
+#analysis-output .strategy-block {
+    margin-bottom: 24px;
+}
+
+#analysis-output .strategy-block h4 {
+    font-size: 15px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
