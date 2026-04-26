@@ -2377,19 +2377,68 @@ html, body {
     max-width: 100vw;
 }
 
-/* Nav shrinks before it can overflow */
+/* ── Search bar input: transparent so it doesn't show white ── */
+.search-bar input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 14px;
+    width: 100%;
+    min-width: 0;
+}
+.search-bar input::placeholder {
+    color: var(--text-secondary);
+}
+/* Also cover the search input on details page */
+#global-search-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 14px;
+    width: 100%;
+}
+#global-search-input::placeholder {
+    color: var(--text-secondary);
+}
+
+/* ── Nav shrinks before it can overflow ── */
+.top-nav {
+    flex-wrap: nowrap;
+    min-width: 0;
+}
+.top-actions {
+    min-width: 0;
+    flex-shrink: 1;
+}
+#connect-wallet-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
 @media (max-width: 1280px) {
     .top-nav { padding: 14px 28px; gap: 12px; }
-    .search-bar { width: 220px; }
-    .search-bar:focus-within { width: 260px; }
+    .search-bar { width: 200px; }
+    .search-bar:focus-within { width: 240px; }
 }
 
 @media (max-width: 1100px) {
-    .top-nav { padding: 12px 20px; }
-    .search-bar { width: 180px; }
-    .nav-links { gap: 16px; }
+    .top-nav { padding: 12px 20px; gap: 10px; }
+    .search-bar { width: 160px; }
+    .search-bar:focus-within { width: 200px; }
+    .nav-links { gap: 14px; }
     .nav-item { font-size: 13px; }
     .hero-content h1 { font-size: 64px; }
+    /* Shrink Connect button text to icon-only */
+    #connect-wallet-btn .btn-text { display: none; }
+}
+
+@media (max-width: 960px) {
+    .search-bar { width: 140px; }
+    #connect-wallet-btn { padding: 8px 12px; font-size: 13px; }
 }
 
 @media (max-width: 1024px) {
